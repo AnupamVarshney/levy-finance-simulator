@@ -24,6 +24,7 @@ levy-finance-simulator/
 │   ├── vg.py           # Variance Gamma process
 │   ├── metrics.py      # summary statistics and VaR
 │   ├── market_data.py  # S&P 500 log-returns via yfinance
+│   ├── calibration.py  # VG parameter calibration via MLE
 │   └── plots.py        # figure generation
 ├── notebooks/demo.ipynb
 ├── figures/
@@ -78,6 +79,32 @@ VG captures stronger negative skewness and heavier tails, leading to materially 
 
 The VG histogram (illustrative parameters) is overlaid on **S&P 500 daily log-returns** since 2010 (`^GSPC` via yfinance). VG captures heavier tails and negative skew relative to GBM; the market overlay shows the model is in the right ballpark for tail shape, with full calibration left as future work.
 
+## Calibrated Parameters (MLE fit to S&P 500 2010–2026)
+
+| Parameter | Value  | Interpretation |
+|-----------|--------|----------------|
+| σ (sigma) | 0.0104 | Base volatility |
+| θ (theta) | 0.0000 | Skew (negative = crash-prone) |
+| ν (nu)    | 1.1561 | Clock variance (fat tails) |
+
+Fitted via Maximum Likelihood Estimation on S&P 500 daily
+log-returns (`^GSPC`, 2010–present); 4158 observations,
+log-likelihood 13474.82.
+
+```bash
+python -m src.calibration
+```
+
+![Calibrated VG vs S&P 500](figures/calibrated_vg_vs_sp500.png)
+
+> **Note on θ.** In this three-parameter density the location is fixed at zero,
+> so θ is simultaneously the skew parameter *and* the mean of the distribution.
+> Because the S&P 500 has positive drift, the constraint θ ≤ 0 binds and the
+> optimizer pins θ to the boundary. Relaxing the bound gives θ = +0.00045 — the
+> sample mean — rather than a crash-skew estimate. Recovering genuine negative
+> skew requires either de-meaning the returns before the fit or adding a fourth
+> location parameter; that is left as immediate future work.
+
 ## Methods (brief)
 
 **GBM**
@@ -108,3 +135,6 @@ See [report.pdf](report.pdf) for a short project note.
 ## Author
 
 Anupam Varshney — Master's student, Universität des Saarlandes
+
+🏆 Best Group Project Award — Data Science course,
+Universität des Saarlandes (Prof. Maaß, June 2026)
