@@ -2,7 +2,7 @@
 
 A Python framework comparing **Geometric Brownian Motion (GBM)** and the **Variance Gamma (VG)** Lévy process for synthetic asset-price simulation.
 
-> I am actively preparing for this topic by developing a Python framework comparing Geometric Brownian Motion and Variance Gamma market simulations, with the goal of extending it into a reinforcement-learning trading environment under heavy-tailed return distributions.
+> An open-source framework for heavy-tailed financial market simulation, developed in preparation for research on Lévy process-based RL environments.
 
 ## Motivation
 
